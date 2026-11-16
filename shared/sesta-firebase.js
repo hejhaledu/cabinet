@@ -28,14 +28,20 @@ S.analytics = function(rec){
     if (!/^[a-z]{2,20}$/.test(app) || !EVENTS.includes(rec.udalost) || !DEVICES.includes(rec.zarizeni)) return;
     // otevření aplikace se počítá jednou za návštěvu (panel prohlížeče)
     if (rec.udalost === 'otevreni' && ss){ const k = 'sesta:counted:' + app; if (ss.getItem(k)) return; ss.setItem(k, '1'); }
-    const field = `${app}__${rec.udalost}__${rec.zarizeni}`;
-    const body = { writes: [{ transform: { document: `${DB}/statistika/${day()}`,
-      fieldTransforms: [{ fieldPath: field, increment: { integerValue: '1' } }] } }] };
-    fetch(`https://firestore.googleapis.com/v1/${DB}:commit?key=${CFG.apiKey}`, {
-      method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(body), keepalive:true
-    }).catch(() => {});
+    send(`${app}__${rec.udalost}__${rec.zarizeni}`).then(r => { if (!r.ok) console.warn('ŠestaApp statistika:', r.status, r.message); });
   } catch(e){}
 };
+/* jeden zápis počítadla; vrací {ok, status, message} */
+async function send(field){
+  const body = { writes: [{ transform: { document: `${DB}/statistika/${day()}`,
+    fieldTransforms: [{ fieldPath: field, increment: { integerValue: '1' } }] } }] };
+  try {
+    const r = await fetch(`https://firestore.googleapis.com/v1/${DB}:commit?key=${CFG.apiKey}`, {
+      method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(body) });
+    let msg = ''; if (!r.ok){ try { const j = await r.json(); msg = (j.error && j.error.message) || ''; } catch(e){} }
+    return { ok:r.ok, status:r.status, message:msg };
+  } catch(e){ return { ok:false, status:0, message:e.message }; }
+}
 
 /* ---------- správa: přihlášení ---------- */
 const TOK = 'sesta:admin:token';
@@ -84,5 +90,5 @@ async function readStats(fromDay){
   return out;
 }
 
-S.fb = { signIn, signOut, token, readStats, day, user: () => (getTok() || {}).email || null, EVENTS, DEVICES };
+S.fb = { testWrite: () => send('hub__otevreni__pocitac'), signIn, signOut, token, readStats, day, user: () => (getTok() || {}).email || null, EVENTS, DEVICES };
 })();
