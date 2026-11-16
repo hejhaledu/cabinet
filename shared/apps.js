@@ -19,13 +19,13 @@ SESTA.bells = [
 ];
 SESTA.apps = [
   {
-    id: 'grid', name: 'GRID', path: 'grid/', icon: 'grid',
+    id: 'grid', name: 'Grid', path: 'grid/', icon: 'grid',
     desc: 'Krátké testy k rozstřižení',
     long: 'Krátký test na 4, 6 nebo 8 kopií na jednu A4 – vytisknout, rozstříhat, rozdat.',
     version: '1.3', year: 2026,
     changes: [
       { version: '1.3', date: '2026-11-16', items: [
-        'Verze 1.3 – sjednocení názvů aplikací v systému CabiNet.'
+        'Aplikace GRID se nově píše Grid.'
       ]},
       { version: '1.2', date: '2026-11-16', items: [
         'Systém aplikací pro pedagogy se nově jmenuje CabiNet.'

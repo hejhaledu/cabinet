@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CabiNet – GRID</title>
+<title>CabiNet – Grid</title>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
 <link rel="stylesheet" href="../shared/sesta.css?v=1.3.0">
 <style>
@@ -216,7 +216,7 @@ input[type=text],input[type=number],select,textarea{border-color:var(--border)}
 <header class="topbar">
   <div class="brand">
     <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="1" y="1" width="16" height="16" rx="3" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M9 1v16M1 9h16" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg></div>
-    <div>CabiNet – GRID<small>krátké testy k rozstřižení</small></div>
+    <div>CabiNet – Grid<small>krátké testy k rozstřižení</small></div>
   </div>
   <div class="spacer"></div>
   <label class="fileblock" title="Název stahovaného souboru – lze přepsat">
@@ -396,7 +396,7 @@ input[type=text],input[type=number],select,textarea{border-color:var(--border)}
 <script>
 'use strict';
 /* =====================================================================
-   CabiNet – GRID
+   CabiNet – Grid
    Jednosouborová aplikace pro tvorbu krátkých testů (4, 6 nebo 8 kopií na A4).
    Bez externích knihoven: vlastní výpočet rozložení, náhled v SVG
    a vlastní generátor PDF s vloženými TrueType písmy (vektorový text).
@@ -1320,7 +1320,7 @@ async function buildPDF(pages, F, title, logoImg) {
   doc.set(pagesId, `<< /Type /Pages /Kids [${pageIds.map(p => p + ' 0 R').join(' ')}] /Count ${pageIds.length} >>`);
   doc.set(catalog, `<< /Type /Catalog /Pages ${pagesId} 0 R /ViewerPreferences << /PrintScaling /None >> >>`);
   const d = new Date(), pd = n => String(n).padStart(2, '0');
-  doc.set(info, `<< /Title ${pdfTextString(title || 'Test')} /Producer ${pdfTextString('CabiNet – GRID')} /Creator ${pdfTextString('CabiNet – GRID')} /CreationDate (D:${d.getFullYear()}${pd(d.getMonth() + 1)}${pd(d.getDate())}${pd(d.getHours())}${pd(d.getMinutes())}${pd(d.getSeconds())}) >>`);
+  doc.set(info, `<< /Title ${pdfTextString(title || 'Test')} /Producer ${pdfTextString('CabiNet – Grid')} /Creator ${pdfTextString('CabiNet – Grid')} /CreationDate (D:${d.getFullYear()}${pd(d.getMonth() + 1)}${pd(d.getDate())}${pd(d.getHours())}${pd(d.getMinutes())}${pd(d.getSeconds())}) >>`);
   return doc.build(catalog, info);
 }
 /* Logo převedené na rastr 600 dpi (RGB + průhlednost) pro PDF. */
@@ -1421,7 +1421,7 @@ async function exportKey() {
       y += 3; rule(); y += 4;
     });
     para(`Celkem bodů: ${fmtCz(totalPoints(state))}`, 13, true, M, 0, 1);
-    para('Vytvořeno v aplikaci CabiNet – GRID. Tento klíč nepatří k žákovské verzi testu.', 8.5, false, M, 0.5);
+    para('Vytvořeno v aplikaci CabiNet – Grid. Tento klíč nepatří k žákovské verzi testu.', 8.5, false, M, 0.5);
     pages.push(ops);
     const bytes = await buildPDF(pages, F, 'Klíč – ' + (state.info.title || 'Test'), null);
     download(bytes, fileName(state) + '_klic.pdf', 'application/pdf');
@@ -1733,7 +1733,7 @@ async function openProject(file) {
   try {
     const data = JSON.parse(await file.text());
     const src = data && data.state ? data.state : data;
-    if (!src || !Array.isArray(src.questions)) throw new Error('Soubor neobsahuje projekt CabiNet – GRID.');
+    if (!src || !Array.isArray(src.questions)) throw new Error('Soubor neobsahuje projekt CabiNet – Grid.');
     state = sanitizeState(src); state.isSample = false; logoSizeFor = null; collapsed.clear();
     syncAll(); changed(); await ensureFont(state.style.font); updateFontNotice();
     toast('Projekt byl načten.');

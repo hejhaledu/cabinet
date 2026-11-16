@@ -12,7 +12,7 @@ shared/
   apps.js             seznam aplikací – název, popis, ikona, verze, rok, „Co je nového“
   fonts/              písmo Inter
   logo-skoly.png      logo školy
-grid/index.html       GRID – krátké testy k rozstřižení
+grid/index.html       Grid – krátké testy k rozstřižení
 zasedacka/index.html  Layout – zasedací pořádek (dříve ZASEDAČKA)
 cestak/index.html     TripDocument – cestovní doklady (dříve CESŤÁK)
 ```
