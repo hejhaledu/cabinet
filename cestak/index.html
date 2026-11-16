@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="ŠestaApp – CESTÁK: vyplnění, výpočet a tisk cestovních dokladů ZŠ Šestajovice.">
 <title>ŠestaApp – CESŤÁK</title>
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../shared/sesta.css?v=1.0.3">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
+<link rel="stylesheet" href="../shared/sesta.css?v=1.1.0">
 <style>
 /* =========================================================
    ŠestaApp – CESTÁK · styly aplikace
@@ -368,7 +368,7 @@ textarea.input{height:auto;padding:9px 11px;resize:vertical;min-height:80px}
 }
 
 /* ===== ŠestaApp 1.0 – úpravy podle společného stylu ===== */
-.app-main{height:100%;grid-template-columns:370px 1fr}
+.app-main{height:100%;grid-template-columns:var(--s-panel) 1fr}
 .editor{background:var(--bg-app)}
 .editor-inner{padding:16px}
 .editor .g3,.editor .g4{grid-template-columns:1fr 1fr}
@@ -953,9 +953,9 @@ const PDFGen = (() => {
 })();
 
 </script>
-<script src="../shared/apps.js?v=1.0.3"></script>
-<script src="../shared/sesta-firebase.js?v=1.0.3"></script>
-<script src="../shared/sesta-shell.js?v=1.0.3"></script>
+<script src="../shared/apps.js?v=1.1.0"></script>
+<script src="../shared/sesta-firebase.js?v=1.1.0"></script>
+<script src="../shared/sesta-shell.js?v=1.1.0"></script>
 <script>
 /* =========================================================
    ŠestaApp – CESTÁK · aplikace (editor, náhled, ukládání)
@@ -1179,7 +1179,7 @@ const SECTIONS = [
   [5, "Ubytování a vedlejší výdaje"], [6, "Souhlas s pracovní cestou"], [7, "Pokladní doklad"]
 ];
 // Verze 2.0: po spuštění jsou všechny sekce sbalené (přehlednost); stav platí jen pro aktuální relaci.
-const collapsed = new Set(SECTIONS.map(([n]) => n));
+const collapsed = new Set(SECTIONS.map(([n]) => n).filter((n) => n !== 1));
 
 function field(key, label, inputHtml, { req = false, hint = "", cls = "" } = {}) {
   return `<div class="field ${cls}" data-f="${key}"><label for="f-${key}">${label}${req ? '<span class="req">*</span>' : ""}</label>${inputHtml}${hint ? `<div class="field-hint">${hint}</div>` : ""}<div class="field-msg">${ico("alert")}<span></span></div></div>`;
@@ -2148,6 +2148,7 @@ function sestaInit() {
   ed.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b && !b.closest(".section-head") && !b.dataset.toggle && b.dataset.expandAll === undefined && b.dataset.collapseAll === undefined) setTimeout(mark, 0); });
   SESTA.init({
     app: "cestak",
+    panel: "#editor",
     subtitle: () => [D.employee.trim(), D.tripType === "multi" ? "vícedenní" : "jednodenní"].filter(Boolean).join(" · "),
     title: () => `${DOC_TITLES[D.tripType]} – ${D.employee || ""}`.trim(),
     fileParts: () => { const p = D.employee.trim().split(/\s+/).filter(Boolean); return [p.length ? p[p.length - 1] : "doklad", C.isISODate(D.startDate) ? D.startDate : C.todayISO()]; },
@@ -2161,7 +2162,8 @@ function sestaInit() {
     },
     check: () => validate().filter((i) => i.key).map((i) => ({ level: i.kind === "bad" ? "err" : "", text: i.msg, go: () => gotoField(i.key) })),
     trial: { sample: sampleDoc, get: () => JSON.parse(JSON.stringify(D)), set: setDoc },
-    empty: { host: ".viewer", text: "Vyplňte cestovní doklad, aplikace spočítá náhrady a připraví ho k tisku.", test: () => !isDirty(),
+    empty: { host: ".viewer", text: "Vyplňte cestovní doklad, aplikace spočítá náhrady a připraví ho k tisku.",
+      note: "Toto není ostrá verze. Aplikace je ve vývoji – nepoužívejte ji pro oficiální doklady.", test: () => !isDirty(),
       start: () => { const s1 = $("#sec-1"); if (s1 && s1.classList.contains("collapsed")) s1.querySelector(".section-head").click(); setView("editor"); setTimeout(() => { const f = document.querySelector('[data-f="employee"] input'); f && f.focus(); }, 60); } },
     settings: () => [
       { label: "Údaje školy, podpisy a sazby…", icon: "gear", run: () => openSettings() },

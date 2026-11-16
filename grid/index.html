@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ŠestaApp – GRID</title>
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../shared/sesta.css?v=1.0.3">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
+<link rel="stylesheet" href="../shared/sesta.css?v=1.1.0">
 <style>
 :root{
   --bg:var(--bg-app); --card:var(--bg-app); --card-2:var(--bg-subtle); --line:var(--border); --line-2:var(--border);
@@ -177,7 +177,7 @@ details.more .in{padding:2px 14px 14px}
 
 /* ===== ŠestaApp 1.0 – úpravy podle společného stylu ===== */
 .topbar{display:none!important}
-.layout{height:auto;grid-template-columns:370px 1fr;min-height:0}
+.layout{height:auto;grid-template-columns:var(--s-panel) 1fr;min-height:0}
 .left{background:var(--bg-app)}
 .tab-body{padding:16px;display:flex;flex-direction:column;gap:12px}
 .gcard{border:1px solid var(--border);border-radius:14px;background:var(--bg-app);box-shadow:var(--sh-1);flex:none}
@@ -390,9 +390,9 @@ input[type=text],input[type=number],select,textarea{border-color:var(--border)}
 <div class="modal-bg" id="modalBg"><div class="modal" role="dialog" aria-modal="true"><h3 id="modalTitle"></h3><div class="body" id="modalBody"></div><div class="actions" id="modalActions"></div></div></div>
 <div class="toast" id="toast"></div>
 
-<script src="../shared/apps.js?v=1.0.3"></script>
-<script src="../shared/sesta-firebase.js?v=1.0.3"></script>
-<script src="../shared/sesta-shell.js?v=1.0.3"></script>
+<script src="../shared/apps.js?v=1.1.0"></script>
+<script src="../shared/sesta-firebase.js?v=1.1.0"></script>
+<script src="../shared/sesta-shell.js?v=1.1.0"></script>
 <script>
 'use strict';
 /* =====================================================================
@@ -1801,6 +1801,7 @@ function buildCards() {
   const [cHead, cQ] = pTest.querySelectorAll(':scope > .card');
   const c1 = card(1, 'Hlavička testu', 'gcHead'), c2 = card(2, 'Otázky', 'gcQ'), c3 = card(3, 'Vzhled', 'gcStyle'), c4 = card(4, 'Logo školy', 'gcLogo');
   const take = (src, dst, subtitle) => { const h = src.querySelector(':scope > h2'); if (subtitle && h) { const sh = document.createElement('div'); sh.className = 'sub-h'; sh.textContent = h.childNodes[0].textContent.trim(); dst.append(sh); } if (h) { const hint = h.querySelector('.hint'); h.remove(); if (hint) { hint.style.display = 'none'; dst.append(hint); } } dst.append(...src.childNodes); src.remove(); };
+  c1.classList.remove('closed');
   take(cHead, c1.querySelector('.gcard-b'));
   take(cQ, c2.querySelector('.gcard-b'));
   pStyle.querySelectorAll(':scope > .card').forEach(c => take(c, c3.querySelector('.gcard-b'), true));
@@ -1824,6 +1825,7 @@ function sestaInit() {
   buildCards(); updateSummaries();
   SESTA.init({
     app: 'grid',
+    panel: '.left',
     subtitle: () => [state.info.title, state.info.group ? 'skupina ' + state.info.group : ''].filter(Boolean).join(' · '),
     title: () => state.info.title || 'Test',
     fileParts: () => [state.info.title || 'Test', state.info.group ? 'skupina-' + state.info.group : '', SESTA.today()],
@@ -1831,7 +1833,7 @@ function sestaInit() {
     legacy: o => (o && Array.isArray(o.questions)) ? o : (o && o.state && Array.isArray(o.state.questions) ? o.state : null),
     load: d => loadGrid(d && d.state && Array.isArray(d.state.questions) ? d.state : d),
     actions: {
-      new: () => { state = emptyState(state); enforceLogo(); collapsed.clear(); syncAll(); persist(); render(); updateSummaries(); $$('.gcard').forEach(c => c.classList.add('closed')); },
+      new: () => { state = emptyState(state); enforceLogo(); collapsed.clear(); syncAll(); persist(); render(); updateSummaries(); $$('.gcard').forEach(c => c.classList.toggle('closed', c.id !== 'gcHead')); },
       pdf: [ { label: 'Test pro žáky (PDF)', run: exportPDF }, { label: 'Klíč správných odpovědí (PDF)', run: exportKey } ],
       print: printTest
     },

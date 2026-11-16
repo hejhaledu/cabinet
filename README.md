@@ -23,7 +23,7 @@ Pravidla vzhledu a chování jsou v dokumentu projektu „ŠestaApp – styl a s
 
 1. Obsah této složky nahrajte do kořene repozitáře (vč. složek `shared`, `grid`, `zasedacka`, `cestak`).
 2. Settings → Pages → Deploy from a branch → `main` / root.
-3. Při každé změně ve `shared/` zvyšte číslo `?v=1.0.0` u odkazů na sdílené soubory ve všech stránkách, aby prohlížeče kolegů nenačítaly starou verzi.
+3. Při každé změně ve `shared/` zvyšte číslo `?v=1.1.0` u odkazů na sdílené soubory ve všech stránkách, aby prohlížeče kolegů nenačítaly starou verzi.
 
 Aplikace je nutné zkoušet přes webový server (GitHub Pages nebo `python3 -m http.server`), ne dvojklikem na soubor – prohlížeč by na `file://` neotevřel složku jako stránku.
 

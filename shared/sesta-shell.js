@@ -273,7 +273,7 @@ function checkEmpty(){
   hideEmpty();
   if (!C || !C.empty || st.trial || ss.getItem(K('empty-off')) || !C.empty.test()) return;
   const host = typeof C.empty.host === 'string' ? $(C.empty.host) : C.empty.host; if (!host) return;
-  const e = el(`<div class="s-empty"><div class="s-empty-box"><div class="s-empty-tile">${icon(A.icon)}</div><h2>${esc(A.name)}</h2><p>${esc(C.empty.text)}</p>
+  const e = el(`<div class="s-empty"><div class="s-empty-box"><div class="s-empty-tile">${icon(A.icon)}</div><h2>${esc(A.name)}</h2><p>${esc(C.empty.text)}</p>${C.empty.note ? `<div class="s-empty-note">${icon('alert')}<span>${esc(C.empty.note)}</span></div>` : ''}
     <div class="s-empty-btns"><button type="button" class="s-btn pri" data-a="start">Začít</button><button type="button" class="s-btn" data-a="open">${icon('open')}Otevřít soubor</button><button type="button" class="s-btn" data-a="trial">${icon('flask')}Vyzkoušet na ukázce</button></div>
     <small>nebo sem přetáhněte uložený soubor .json</small></div></div>`);
   e.querySelector('[data-a=start]').onclick = () => { ss.setItem(K('empty-off'),'1'); hideEmpty(); C.empty.start && C.empty.start(); };
@@ -364,7 +364,7 @@ function header(){
       <span class="s-sep"></span>
       <span class="s-split s-phone-hide ${pdf.length>1?'':'single'}"><button type="button" class="s-ib" id="sPdf" data-tip="${esc(pdf[0]?pdf[0].label:'PDF')}" data-key="${MOD}+Shift+P" aria-label="PDF">${icon('pdf')}</button><button type="button" class="s-car" id="sPdfMore" data-menu data-tip="Další varianty PDF" aria-label="Další varianty PDF">${icon('chev')}</button></span>
       <div class="s-menu" id="sPdfMenu" role="menu"></div>
-      <button type="button" class="s-ib s-pri" id="sPrint" data-tip="Tisk" data-key="${MOD}+P" aria-label="Tisk">${icon('print')}</button>
+      <button type="button" class="s-ib" id="sPrint" data-tip="Tisk" data-key="${MOD}+P" aria-label="Tisk">${icon('print')}</button>
       <span class="s-sep"></span>
       <button type="button" class="s-ib" id="sSet" data-menu data-tip="Nastavení" aria-label="Nastavení">${icon('gear')}</button>
       <div class="s-menu" id="sSetMenu" role="menu"></div>
@@ -465,6 +465,40 @@ function dropZone(){
   });
 }
 
+/* ---------- tažení levého sloupce (pravidla 1.1) ---------- */
+function resizer(){
+  if (!C.panel) return;
+  const panel = typeof C.panel === 'string' ? $(C.panel) : C.panel; if (!panel) return;
+  const host = panel.parentElement; if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+  const key = 'sesta:panel:' + C.app, MIN = 300, root = doc.documentElement;
+  const max = () => Math.max(MIN, Math.round(innerWidth * 0.6));
+  const apply = w => { w = Math.round(Math.min(max(), Math.max(MIN, w))); root.style.setProperty('--s-panel', w + 'px'); return w; };
+  try { const v = +ls.getItem(key); if (v) apply(v); } catch(e){}
+  const h = el('<div class="s-resizer" role="separator" aria-orientation="vertical" aria-label="Šířka levého sloupce" title="Táhnutím změníte šířku sloupce, dvojklikem vrátíte výchozí"></div>');
+  host.appendChild(h);
+  const place = () => { h.style.left = (panel.getBoundingClientRect().right - host.getBoundingClientRect().left) + 'px'; };
+  place(); addEventListener('resize', place); new ResizeObserver(place).observe(panel);
+  let x0, w0, raf;
+  h.addEventListener('pointerdown', e => { e.preventDefault(); h.setPointerCapture(e.pointerId); x0 = e.clientX; w0 = panel.getBoundingClientRect().width; h.classList.add('drag'); doc.body.classList.add('s-resizing'); });
+  h.addEventListener('pointermove', e => { if (!h.classList.contains('drag')) return; apply(w0 + e.clientX - x0); cancelAnimationFrame(raf); raf = requestAnimationFrame(() => dispatchEvent(new Event('resize'))); });
+  const end = () => { if (!h.classList.contains('drag')) return; h.classList.remove('drag'); doc.body.classList.remove('s-resizing'); try { ls.setItem(key, Math.round(panel.getBoundingClientRect().width)); } catch(e){} dispatchEvent(new Event('resize')); };
+  h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
+  h.addEventListener('dblclick', () => { root.style.removeProperty('--s-panel'); try { ls.removeItem(key); } catch(e){} dispatchEvent(new Event('resize')); });
+}
+
+/* ---------- hodiny v hlavičce rozcestníku ---------- */
+function clock(){
+  const box = el('<span class="s-clock" aria-live="off"></span>');
+  $('.s-actions').prepend(box);
+  const tick = () => {
+    const d = new Date();
+    box.textContent = d.toLocaleTimeString('cs-CZ', {hour:'numeric', minute:'2-digit'}) + ' · ' + d.toLocaleDateString('cs-CZ', {weekday:'short', day:'numeric', month:'numeric', year:'numeric'});
+    S.onMinute && S.onMinute(d);
+    setTimeout(tick, 60000 - d.getSeconds() * 1000 - d.getMilliseconds() + 50);
+  };
+  tick();
+}
+
 /* ---------- klávesy ---------- */
 function keys(e){
   const typing = /INPUT|TEXTAREA|SELECT/.test((doc.activeElement||{}).tagName||'') || (doc.activeElement && doc.activeElement.isContentEditable);
@@ -487,7 +521,8 @@ S.init = function(cfg){
   A = C.app === 'hub' ? { id:'hub', name:S.brand.name, icon:'brand', version:S.brand.version, year:S.brand.year, desc:'Aplikace pro pedagogy', changes:[] } : S.apps.find(a => a.id === C.app);
   if (!A) throw new Error('Aplikace ' + C.app + ' není v shared/apps.js');
   doc.body.classList.add('sesta');
-  header(); footer(); phoneBar(); dropZone();
+  header(); footer(); phoneBar(); dropZone(); resizer();
+  if (C.app === 'hub' && C.clock) clock();
   addEventListener('keydown', keys, true);
   addEventListener('resize', () => { tipHide(); });
   if (C.app !== 'hub'){

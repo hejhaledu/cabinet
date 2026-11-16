@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ŠestaApp – ZASEDAČKA</title>
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
-<link rel="stylesheet" href="../shared/sesta.css?v=1.0.3">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
+<link rel="stylesheet" href="../shared/sesta.css?v=1.1.0">
 <style>
 :root{
   --bg:var(--bg-work);--surface:var(--bg-app);--surface-2:var(--bg-subtle);--surface-3:var(--bg-subtle);--viewer-bg:var(--bg-work);
@@ -14,10 +14,11 @@
   --danger-bg:var(--danger-soft);--warn-bg:var(--warn-soft);--success:var(--ok);--success-bg:var(--ok-soft);
   --shadow-sm:var(--sh-1);--shadow-md:var(--sh-2);--shadow-lg:var(--sh-3);
   --radius:14px;--radius-sm:10px;
-  --stage-bg:var(--bg-canvas);--board-bg:var(--navy);--board-fg:#FFFFFF;
+  --stage-bg:var(--bg-canvas);--board-bg:#FFFFFF;--board-fg:var(--text);
   --desk-bg:var(--bg-app);--desk-border:var(--border-strong);
   --toast-bg:var(--tip-bg);--toast-fg:var(--tip-fg);--brand-yellow:var(--yellow);
 }
+html[data-theme="dark"]{--board-bg:var(--navy);--board-fg:#FFFFFF}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:var(--font);font-size:14px;line-height:1.45;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow:hidden;font-variant-numeric:tabular-nums}
@@ -281,7 +282,7 @@ html[data-theme="dark"] .rtype.act{background:var(--surface-2)}
 
 /* ===== ŠestaApp 1.0 – úpravy podle společného stylu ===== */
 .app{display:grid;grid-template-rows:1fr;height:auto;min-height:0}
-.main{grid-template-columns:370px 1fr}\n.card-h .ttl{white-space:nowrap}\n.card-h .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.main{grid-template-columns:var(--s-panel) 1fr}\n.card-h .ttl{white-space:nowrap}\n.card-h .meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .card-h{height:54px;padding:0 16px}
 .card-h .num{border-radius:50%;background:var(--yellow-soft);color:var(--text);box-shadow:inset 0 0 0 1.5px var(--yellow)}
 .card-h .ttl{font-size:16px;font-weight:700}
@@ -310,6 +311,7 @@ html[data-theme="dark"] .seg button.act{background:var(--yellow);color:#0C2143}
 .btn.on{background:var(--yellow-soft);border-color:var(--yellow);color:var(--text)}
 .zoombar{top:76px}
 .seat.occ{background:var(--yellow-soft)}
+.board{box-shadow:inset 0 0 0 2px var(--yellow)}
 .st .dot{background:transparent;box-shadow:inset 0 0 0 1.5px var(--border-strong)}
 .st .dot.on{background:var(--ok);box-shadow:none}
 .st .eye.on{color:var(--text);background:var(--yellow-soft)}
@@ -334,7 +336,7 @@ html[data-theme="dark"] .seg button.act{background:var(--yellow);color:#0C2143}
   <div class="main">
     <aside class="side" id="side">
 
-      <section class="card closed" id="cClass">
+      <section class="card" id="cClass">
         <div class="card-h"><span class="num">1</span><span class="ttl">Třída</span><span class="meta" id="mClass"></span><svg class="i chev"><use href="#i-chev"/></svg></div>
         <div class="card-b">
           <div class="g2">
@@ -482,9 +484,9 @@ html[data-theme="dark"] .seg button.act{background:var(--yellow);color:#0C2143}
   </defs>
 </svg>
 
-<script src="../shared/apps.js?v=1.0.3"></script>
-<script src="../shared/sesta-firebase.js?v=1.0.3"></script>
-<script src="../shared/sesta-shell.js?v=1.0.3"></script>
+<script src="../shared/apps.js?v=1.1.0"></script>
+<script src="../shared/sesta-firebase.js?v=1.1.0"></script>
+<script src="../shared/sesta-shell.js?v=1.1.0"></script>
 <script>
 'use strict';
 /* =========================================================
@@ -1490,13 +1492,14 @@ function openCard(id, focus){ $$('.card').forEach(c=>c.classList.toggle('closed'
 
 SESTA.init({
   app:'zasedacka',
+  panel:'#side',
   subtitle: ()=> state.meta.className ? 'třída '+state.meta.className : '',
   title: ()=> [state.meta.className, state.meta.note].filter(Boolean).join(' – '),
   fileParts: ()=> [state.meta.className||'trida', state.meta.note, SESTA.today()],
   serialize: ()=> JSON.parse(snapshot()),
   load: d => loadData(d),
   actions:{
-    new: ()=> { state = defaultState(); sel=null; selRel=null; mode='desks'; hist=[snapshot()]; hIdx=0; persist(); renderAll({fit:true}); $$('.card').forEach(c=>c.classList.add('closed')); },
+    new: ()=> { state = defaultState(); sel=null; selRel=null; mode='desks'; hist=[snapshot()]; hIdx=0; persist(); renderAll({fit:true}); $$('.card').forEach(c=>c.classList.toggle('closed', c.id!=='cClass')); },
     pdf: [ {label:'PDF (barevně)', run:()=>exportPdf(false)}, {label:'PDF pro černobílý tisk', run:()=>exportPdf(true)} ],
     print: ()=> printSheet()
   },
