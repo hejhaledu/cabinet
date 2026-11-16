@@ -33,8 +33,9 @@ S.analytics = function(rec){
 };
 /* jeden zápis počítadla; vrací {ok, status, message} */
 async function send(field){
-  const body = { writes: [{ transform: { document: `${DB}/statistika/${day()}`,
-    fieldTransforms: [{ fieldPath: field, increment: { integerValue: '1' } }] } }] };
+  /* jeden dokument = jedno počítadlo za den: statistika/2026-11-16__grid__pdf__pocitac { n } */
+  const body = { writes: [{ transform: { document: `${DB}/statistika/${day()}__${field}`,
+    fieldTransforms: [{ fieldPath: 'n', increment: { integerValue: '1' } }] } }] };
   try {
     const r = await fetch(`https://firestore.googleapis.com/v1/${DB}:commit?key=${CFG.apiKey}`, {
       method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(body) });
@@ -81,9 +82,10 @@ async function readStats(fromDay){
     const j = await r.json();
     if (!r.ok) throw new Error(r.status === 403 ? 'Účet nemá oprávnění číst statistiku (zkontrolujte UID v pravidlech).' : 'Statistiku nejde načíst (' + r.status + ').');
     for (const d of (j.documents || [])){
-      const name = d.name.split('/').pop(); if (fromDay && name < fromDay) continue;
-      const f = {}; for (const [k, v] of Object.entries(d.fields || {})) f[k] = +(v.integerValue || v.doubleValue || 0);
-      out[name] = f;
+      const id = d.name.split('/').pop(), i = id.indexOf('__'); if (i < 0) continue;
+      const dd = id.slice(0, i), field = id.slice(i + 2); if (fromDay && dd < fromDay) continue;
+      const n = d.fields && d.fields.n ? +(d.fields.n.integerValue || d.fields.n.doubleValue || 0) : 0;
+      (out[dd] = out[dd] || {})[field] = n;
     }
     page = j.nextPageToken || '';
   } while (page);

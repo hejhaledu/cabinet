@@ -62,7 +62,7 @@ SESTA.init({
 ## Statistika a Správa (Firebase)
 
 - Projekt Firebase `sestaapp` (tarif Spark), databáze Firestore, přihlášení e-mailem a heslem jen pro správce.
-- `shared/sesta-firebase.js` posílá anonymní denní počítadla do kolekce `statistika` (dokument = den, pole = `aplikace__udalost__zarizeni`). Bez knihoven, přes REST.
+- `shared/sesta-firebase.js` posílá anonymní denní počítadla do kolekce `statistika` (jeden dokument = jedno počítadlo za den, např. `2026-11-16__grid__pdf__pocitac` s polem `n`). Bez knihoven, přes REST.
 - Nic se neposílá při otevření ze souboru ani na `localhost` (vývoj).
 - Stránka `sprava/` – přihlášení správce a přehled používání (7 / 30 / 90 dní). Odkaz je dole na rozcestníku.
-- Pravidla přístupu (Firestore → Rules) povolují veřejnosti jen přičíst 1 k povolenému počítadlu; číst smí jen správce (UID v pravidlech). Nová aplikace nevyžaduje změnu pravidel, pokud má id z malých písmen bez diakritiky.
+- Pravidla přístupu (Firestore → Rules) povolují veřejnosti jen založit počítadlo s hodnotou 1 nebo k němu přičíst 1; číst smí jen správce (UID v pravidlech). Nová aplikace nevyžaduje změnu pravidel, pokud má id z malých písmen bez diakritiky.
