@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ŠestaApp – aplikace pro pedagogy</title>
+<title>CabiNet – aplikace pro pedagogy</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23FECE1A'/%3E%3Cg fill='none' stroke='%23183051' stroke-width='2.2'%3E%3Crect x='7' y='7' width='7' height='7' rx='1.5'/%3E%3Crect x='18' y='7' width='7' height='7' rx='1.5'/%3E%3Crect x='7' y='18' width='7' height='7' rx='1.5'/%3E%3Cpath d='M21.5 18v7M18 21.5h7'/%3E%3C/g%3E%3C/svg%3E">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
-<link rel="stylesheet" href="shared/sesta.css?v=1.1.0">
+<link rel="stylesheet" href="shared/sesta.css?v=1.2.0">
 <style>
 .hub{overflow:auto;padding:32px 24px 48px}
 .hub-in{max-width:1100px;margin:0 auto}
@@ -19,7 +19,7 @@
 .tl-wrap{margin-top:26px;overflow-x:auto;padding-bottom:4px}
 .tl{position:relative;min-width:720px;height:64px}
 .tl-line{position:absolute;left:0;right:0;top:15px;height:2px;border-radius:2px;background:var(--yellow);opacity:.75}
-.tl-b{position:absolute;top:22px;height:38px;border:1px solid var(--border);border-radius:9px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;transition:background .2s,border-color .2s}
+.tl-b{box-sizing:border-box;position:absolute;top:22px;height:38px;border:1px solid var(--border);border-radius:9px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;transition:background .2s,border-color .2s}
 .tl-b b{font-size:13px;font-weight:700;color:var(--text)}
 .tl-b span{font-size:10.5px;color:var(--muted);white-space:nowrap}
 .tl-b.now{background:var(--yellow-soft);border-color:var(--yellow)}
@@ -53,7 +53,7 @@
 <body>
 <main class="s-main"><div class="hub"><div class="hub-in">
   <section class="hero">
-    <h1 class="word" aria-label="SESTA APP"><span>SESTA</span><span class="app">APP</span></h1>
+    <h1 class="word" aria-label="CabiNet"><span>CABI</span><span class="app">NET</span></h1>
     <p class="tag">Aplikace pro pedagogy</p>
     <div class="tl-wrap"><div class="tl" id="tl" aria-label="Rozvrh vyučovacích hodin"></div></div>
   </section>
@@ -63,9 +63,9 @@
   <div class="news" id="news"></div>
   <p class="adm-link"><a href="sprava/" data-nav>Správa</a></p>
 </div></div></main>
-<script src="shared/apps.js?v=1.1.0"></script>
-<script src="shared/sesta-firebase.js?v=1.1.0"></script>
-<script src="shared/sesta-shell.js?v=1.1.0"></script>
+<script src="shared/apps.js?v=1.2.0"></script>
+<script src="shared/sesta-firebase.js?v=1.2.0"></script>
+<script src="shared/sesta-shell.js?v=1.2.0"></script>
 <script>
 const S = SESTA;
 document.getElementById('tiles').innerHTML = S.apps.map(a => `

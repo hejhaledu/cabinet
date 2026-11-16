@@ -1,5 +1,5 @@
 /* =====================================================================
-   ŠestaApp – sdílená kostra v1.0
+   CabiNet – sdílená kostra v1.0
    Hlavička (logo, nabídka aplikací, 7 ikon), patička, Nastavení,
    zkušební režim, klávesové zkratky, soubory (obálka .json), kontrola
    před tiskem, oznámení se „Vrátit“, prázdný stav, „Co je nového“,
@@ -55,7 +55,7 @@ const st = {
   set saved(v){ ss.setItem(K('saved'), v); },
   get trial(){ return ss.getItem(K('trial')) !== null; }
 };
-let leaving = false;        // přechod v rámci ŠestaApp (neptat se při odchodu)
+let leaving = false;        // přechod v rámci CabiNet (neptat se při odchodu)
 const $ = s => doc.querySelector(s);
 
 /* ---------- motiv ---------- */
@@ -168,7 +168,7 @@ function identify(o){
 }
 const ascii = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z0-9.\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 function fileName(parts, ext){
-  const app = ascii((A ? A.name : 'SestaApp')).toUpperCase();
+  const app = ascii((A ? A.name : 'CabiNet')).toUpperCase();
   const p = [app, ...parts.map(ascii).filter(Boolean)];
   return p.join('_') + '.' + ext;
 }
@@ -180,9 +180,9 @@ function download(blob, name){
 S.download = download; S.fileName = fileName; S.today = today; S.ascii = ascii;
 
 function receive(text, name){
-  let o; try { o = JSON.parse(text); } catch(e){ toast('Soubor nejde přečíst. Vyberte soubor .json uložený v ŠestaApp.', {kind:'err'}); return; }
+  let o; try { o = JSON.parse(text); } catch(e){ toast('Soubor nejde přečíst. Vyberte soubor .json uložený v CabiNet.', {kind:'err'}); return; }
   const id = identify(o);
-  if (!id){ toast('Tento soubor nepatří do ŠestaApp.', {kind:'err'}); return; }
+  if (!id){ toast('Tento soubor nepatří do CabiNet.', {kind:'err'}); return; }
   if (id.app !== C.app){
     const tgt = S.apps.find(a => a.id === id.app);
     if (!tgt){ toast('Soubor patří do aplikace, která tu není.', {kind:'err'}); return; }
@@ -346,7 +346,7 @@ function header(){
   const pdf = (C.actions && C.actions.pdf) || [];
   const h = el(`<header class="s-header">
     <div class="s-brand">
-      <button type="button" class="s-tile" aria-label="Rozcestník ŠestaApp" data-tip="${isHub?'ŠestaApp':'Rozcestník'}">${icon(isHub?'brand':rec.icon)}</button>
+      <button type="button" class="s-tile" aria-label="Rozcestník CabiNet" data-tip="${isHub?'CabiNet':'Rozcestník'}">${icon(isHub?'brand':rec.icon)}</button>
       <div style="min-width:0">
         <div class="s-title"><span class="s-pre">${esc(S.brand.name)}</span>${isHub?'':` <span class="s-sl s-pre">/</span> ${esc(rec.name)}`} <button type="button" class="s-ver" id="sVer" data-tip="Co je nového">${esc(rec.version)}</button></div>
         <div class="s-sub" id="sSub"></div>

@@ -1,4 +1,4 @@
-# ŠestaApp – aplikace pro pedagogy
+# CabiNet – aplikace pro pedagogy
 
 Rozcestník a aplikace pro učitele ZŠ Šestajovice. Běží jako statický web na GitHub Pages, bez serveru a bez přihlašování.
 
@@ -17,13 +17,13 @@ zasedacka/index.html  ZASEDAČKA – zasedací pořádek
 cestak/index.html     CESŤÁK – cestovní doklady
 ```
 
-Pravidla vzhledu a chování jsou v dokumentu projektu „ŠestaApp – styl a společná pravidla“.
+Pravidla vzhledu a chování jsou v dokumentu projektu „CabiNet – styl a společná pravidla“.
 
 ## Nahrání na GitHub Pages
 
 1. Obsah této složky nahrajte do kořene repozitáře (vč. složek `shared`, `grid`, `zasedacka`, `cestak`).
 2. Settings → Pages → Deploy from a branch → `main` / root.
-3. Při každé změně ve `shared/` zvyšte číslo `?v=1.1.0` u odkazů na sdílené soubory ve všech stránkách, aby prohlížeče kolegů nenačítaly starou verzi.
+3. Při každé změně ve `shared/` zvyšte číslo `?v=1.2.0` u odkazů na sdílené soubory ve všech stránkách, aby prohlížeče kolegů nenačítaly starou verzi.
 
 Aplikace je nutné zkoušet přes webový server (GitHub Pages nebo `python3 -m http.server`), ne dvojklikem na soubor – prohlížeč by na `file://` neotevřel složku jako stránku.
 

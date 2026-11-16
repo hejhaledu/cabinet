@@ -1,5 +1,5 @@
 /* =====================================================================
-   ŠestaApp – napojení na Firebase (bez knihoven, přes REST)
+   CabiNet – napojení na Firebase (bez knihoven, přes REST)
    - anonymní statistika: denní počítadla v kolekci „statistika“
    - přihlášení správce a čtení statistiky (stránka Správa)
    Žádné IP adresy, jména ani obsah dokumentů se neposílají.
@@ -28,7 +28,7 @@ S.analytics = function(rec){
     if (!/^[a-z]{2,20}$/.test(app) || !EVENTS.includes(rec.udalost) || !DEVICES.includes(rec.zarizeni)) return;
     // otevření aplikace se počítá jednou za návštěvu (panel prohlížeče)
     if (rec.udalost === 'otevreni' && ss){ const k = 'sesta:counted:' + app; if (ss.getItem(k)) return; ss.setItem(k, '1'); }
-    send(`${app}__${rec.udalost}__${rec.zarizeni}`).then(r => { if (!r.ok) console.warn('ŠestaApp statistika:', r.status, r.message); });
+    send(`${app}__${rec.udalost}__${rec.zarizeni}`).then(r => { if (!r.ok) console.warn('CabiNet statistika:', r.status, r.message); });
   } catch(e){}
 };
 /* jeden zápis počítadla; vrací {ok, status, message} */
