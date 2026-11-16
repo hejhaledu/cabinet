@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ŠestaApp – aplikace pro pedagogy</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23FECE1A'/%3E%3Cg fill='none' stroke='%23183051' stroke-width='2.2'%3E%3Crect x='7' y='7' width='7' height='7' rx='1.5'/%3E%3Crect x='18' y='7' width='7' height='7' rx='1.5'/%3E%3Crect x='7' y='18' width='7' height='7' rx='1.5'/%3E%3Cpath d='M21.5 18v7M18 21.5h7'/%3E%3C/g%3E%3C/svg%3E">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){}</script>
+<link rel="stylesheet" href="shared/sesta.css?v=1.0.1">
+<style>
+.hub{overflow:auto;padding:32px 24px 48px}
+.hub-in{max-width:1100px;margin:0 auto}
+.hello{display:flex;align-items:center;gap:20px;margin-bottom:28px}
+.hello img{height:64px;width:auto;border-radius:10px;background:#fff;padding:6px;border:1px solid var(--border)}
+.hello h1{margin:0;font-size:26px;letter-spacing:-.01em}
+.hello p{margin:2px 0 0;color:var(--muted)}
+.sec-t{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:36px}
+.tile{display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--bg-app);border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh-1);color:var(--text);text-decoration:none;transition:box-shadow .15s,transform .15s,border-color .15s}
+.tile:hover{box-shadow:var(--sh-2);transform:translateY(-2px);border-color:var(--yellow)}
+.tile .top{display:flex;align-items:center;gap:14px}
+.tile .ic{width:52px;height:52px;border-radius:14px;background:var(--yellow);color:#183051;display:grid;place-items:center;flex:none}
+.tile .ic .s-i{width:28px;height:28px;stroke-width:1.9}
+.tile b{font-size:18px}
+.tile .d{display:block;font-size:13px;color:var(--muted)}
+.tile p{margin:0;color:var(--text-2);font-size:14px;line-height:1.5;flex:1}
+.tile .meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.tile .meta .go{margin-left:auto;font-weight:600;color:var(--text)}
+.news{background:var(--bg-app);border:1px solid var(--border);border-radius:16px;padding:8px 20px;box-shadow:var(--sh-1)}
+.news-row{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--border)}
+.news-row:last-child{border-bottom:0}
+.news-row .n{min-width:110px;font-weight:700}
+.news-row .n small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.news-row ul{margin:0;padding-left:18px;color:var(--text-2)}
+.adm-link{margin:28px 0 0;text-align:center;font-size:12.5px}
+.adm-link a{color:var(--muted);text-decoration:none}
+.adm-link a:hover{color:var(--text);text-decoration:underline}
+@media (max-width:767px){.hub{padding:20px 14px 32px}.hello img{height:48px}.hello h1{font-size:20px}.news-row{flex-direction:column;gap:4px}}
+</style>
+</head>
+<body>
+<main class="s-main"><div class="hub"><div class="hub-in">
+  <section class="hello">
+    <img src="shared/logo-skoly.png" alt="Logo školy">
+    <div><h1>Aplikace pro pedagogy</h1><p id="school"></p></div>
+  </section>
+  <h2 class="sec-t">Aplikace</h2>
+  <div class="tiles" id="tiles"></div>
+  <h2 class="sec-t">Co je nového</h2>
+  <div class="news" id="news"></div>
+  <p class="adm-link"><a href="sprava/" data-nav>Správa</a></p>
+</div></div></main>
+<script src="shared/apps.js?v=1.0.1"></script>
+<script src="shared/sesta-firebase.js?v=1.0.1"></script>
+<script src="shared/sesta-shell.js?v=1.0.1"></script>
+<script>
+const S = SESTA;
+document.getElementById('school').textContent = S.brand.school;
+document.getElementById('tiles').innerHTML = S.apps.map(a => `
+  <a class="tile" href="${a.path}" data-nav>
+    <div class="top"><span class="ic">${S.icon(a.icon)}</span><span><b>${S.esc(a.name)}</b><span class="d">${S.esc(a.desc)}</span></span></div>
+    <p>${S.esc(a.long)}</p>
+    <div class="meta">verze ${S.esc(a.version)}<span class="go">Otevřít →</span></div>
+  </a>`).join('');
+document.querySelectorAll('[data-nav]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); S.go(a.getAttribute('href')); }));
+document.getElementById('news').innerHTML = S.apps.map(a => { const c = (a.changes||[])[0]; return c ? `<div class="news-row"><div class="n">${S.esc(a.name)} ${S.esc(c.version)}<small>${new Date(c.date).toLocaleDateString('cs-CZ')}</small></div><ul>${c.items.map(i=>`<li>${S.esc(i)}</li>`).join('')}</ul></div>` : ''; }).join('');
+S.init({ app:'hub', root:'' });
+document.getElementById('sSub').textContent = 'Aplikace pro pedagogy · ' + S.brand.school;
+</script>
+</body>
+</html>

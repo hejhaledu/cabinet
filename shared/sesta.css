@@ -1,0 +1,212 @@
+/* =====================================================================
+   ŠestaApp – sdílený styl v1.0
+   Jediný zdroj barev, písma a společných prvků (hlavička, patička,
+   nabídky, okna, oznámení, zkušební režim). Aplikace tyto hodnoty
+   nepřepisují – jen na ně mapují své vlastní proměnné.
+   ===================================================================== */
+
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/inter-400.woff) format('woff')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/inter-500.woff) format('woff')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/inter-600.woff) format('woff')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/inter-700.woff) format('woff')}
+
+/* ---------- 1. Barvy ---------- */
+:root{
+  --yellow:#FECE1A; --yellow-soft:#FEF7DC; --navy:#183051; --navy-strong:#0B2A53;
+  --primary-bg:#0B2A53; --primary-fg:#FFFFFF;
+  --text:#0C2143; --text-2:#4B5972; --muted:#6B7587;
+  --bg-app:#FFFFFF; --bg-work:#F4F6F8; --bg-canvas:#FFFFFF; --bg-subtle:#F1F3F6;
+  --border:#E3E7EC; --border-strong:#9AA3B2; --grid-dot:#D3D8E0;
+  --ok:#1D7A4D; --ok-soft:#E5F4EC; --warn:#B07A00; --warn-soft:#FDF3DA; --danger:#E5333B; --danger-soft:#FDECEC;
+  --tip-bg:#0C2143; --tip-fg:#FFFFFF;
+  --focus:#0B2A53; --focus-ring:rgba(11,42,83,.14);
+  --sh-1:0 1px 2px rgba(12,33,67,.06); --sh-2:0 4px 16px rgba(12,33,67,.10); --sh-3:0 12px 36px rgba(12,33,67,.18);
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --s-header:64px; --s-footer:28px; --s-stripe:4px;
+  color-scheme:light;
+}
+[data-theme="dark"]{
+  --yellow-soft:#2E2A14; --navy:#24406B;
+  --primary-bg:#FECE1A; --primary-fg:#0C2143;
+  --text:#E8EDF5; --text-2:#C3CCDC; --muted:#97A3B8;
+  --bg-app:#0E1B30; --bg-work:#0A1424; --bg-canvas:#12223B; --bg-subtle:#1A2B45;
+  --border:#24365A; --border-strong:#5A6E94; --grid-dot:#2A3D60;
+  --ok:#4ADE80; --ok-soft:#0F2418; --warn:#F1C14A; --warn-soft:#2E2610; --danger:#F26369; --danger-soft:#2A1418;
+  --tip-bg:#E8EDF5; --tip-fg:#0C2143;
+  --focus:#FECE1A; --focus-ring:rgba(254,206,26,.18);
+  --sh-1:0 1px 2px rgba(0,0,0,.4); --sh-2:0 6px 20px rgba(0,0,0,.45); --sh-3:0 16px 44px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+
+/* ---------- 2. Základ stránky ---------- */
+html,body{margin:0;height:100%}
+body.sesta{font-family:var(--font);font-size:14px;line-height:1.45;color:var(--text);background:var(--bg-work);
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;overflow:hidden;
+  display:flex;flex-direction:column;height:100vh;height:100dvh}
+body.sesta button,body.sesta input,body.sesta select,body.sesta textarea{font-family:inherit}
+body.sesta > .s-main{flex:1;min-height:0;display:flex;flex-direction:column;position:relative}
+body.sesta > .s-main > *{flex:1;min-height:0}
+.s-i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- 3. Proužek a hlavička ---------- */
+.s-stripe{height:var(--s-stripe);background:var(--yellow);flex:none}
+.s-header{height:var(--s-header);flex:none;display:flex;align-items:center;gap:12px;padding:0 16px 0 20px;
+  background:var(--bg-app);border-bottom:1px solid var(--border);position:relative;z-index:60}
+.s-brand{position:relative;display:flex;align-items:center;gap:12px;min-width:0}
+.s-tile{width:40px;height:40px;border-radius:12px;background:var(--yellow);color:#183051;display:grid;place-items:center;
+  flex:none;cursor:pointer;border:0;padding:0;transition:box-shadow .15s}
+.s-tile:hover,.s-brand.open .s-tile{box-shadow:0 0 0 3px rgba(254,206,26,.35)}
+.s-tile .s-i{width:22px;height:22px;stroke-width:2}
+.s-title{font-size:18px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;white-space:nowrap;cursor:default}
+.s-title .s-sl{color:var(--muted);font-weight:500}
+.s-ver{position:relative;font-size:11px;font-weight:700;color:var(--text-2);background:var(--bg-subtle);border:0;border-radius:999px;padding:2px 8px;cursor:pointer;font-family:inherit}
+.s-ver:hover{color:var(--text)}
+.s-ver.new::after{content:"";position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 2px var(--bg-app)}
+.s-sub{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.s-state{display:inline-flex;align-items:center;gap:5px}
+.s-state.dirty{color:var(--warn);font-weight:600}
+.s-state.dirty::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.s-state.trial{color:var(--warn);background:var(--warn-soft);font-weight:600;padding:1px 8px;border-radius:999px}
+.s-actions{margin-left:auto;display:flex;align-items:center;gap:4px}
+.s-sep{width:1px;height:24px;background:var(--border);margin:0 8px;flex:none}
+.s-ib{width:38px;height:38px;border-radius:10px;border:0;background:transparent;color:var(--text-2);display:grid;place-items:center;cursor:pointer;position:relative;padding:0;transition:background .15s,color .15s}
+.s-ib:hover{background:var(--bg-subtle);color:var(--text)}
+.s-ib[disabled]{opacity:.4;cursor:not-allowed;background:transparent}
+.s-ib.s-pri{background:var(--primary-bg);color:var(--primary-fg)}
+.s-ib.s-pri:hover{filter:brightness(1.12)}
+.s-ib .s-dot{position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px var(--bg-app)}
+.s-split{display:inline-flex;border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh-1);height:38px;margin-right:4px;background:var(--bg-app)}
+.s-split .s-ib{height:36px;border-radius:9px 0 0 9px}
+.s-split .s-car{width:24px;height:36px;border:0;border-left:1px solid var(--border);background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;border-radius:0 9px 9px 0;padding:0}
+.s-split .s-car:hover{background:var(--bg-subtle)}
+.s-split .s-car .s-i{width:14px;height:14px}
+.s-split.single .s-car{display:none}
+.s-split.single .s-ib{border-radius:9px}
+
+/* ---------- 4. Nabídky ---------- */
+.s-menu{position:absolute;min-width:240px;background:var(--bg-app);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh-3);padding:6px;z-index:80;display:none}
+.s-menu.open{display:block;animation:s-pop .14s ease-out}
+@keyframes s-pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.s-mi{display:flex;align-items:center;gap:10px;width:100%;min-height:38px;border:0;background:transparent;text-align:left;padding:6px 10px;border-radius:9px;cursor:pointer;font:500 14px var(--font);color:var(--text)}
+.s-mi:hover{background:var(--bg-subtle)}
+.s-mi[disabled]{opacity:.45;cursor:not-allowed;background:transparent}
+.s-mi .s-i{width:18px;height:18px;color:var(--text-2)}
+.s-mi .s-k{margin-left:auto;color:var(--muted);font-size:12px;font-weight:500}
+.s-mi.danger,.s-mi.danger .s-i{color:var(--danger)}
+.s-mi.on{background:var(--yellow-soft)}
+.s-mh{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px 4px}
+.s-mhr{height:1px;background:var(--border);margin:6px 4px}
+/* nabídka aplikací */
+.s-appmenu{top:52px;left:-4px;width:340px}
+.s-am{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px;color:var(--text);text-decoration:none;cursor:pointer}
+.s-am:hover{background:var(--bg-subtle)}
+.s-am.cur{background:var(--yellow-soft);cursor:default}
+.s-am .s-at{width:32px;height:32px;border-radius:9px;background:var(--yellow);display:grid;place-items:center;color:#183051;flex:none}
+.s-am .s-at.home{background:var(--bg-subtle);color:var(--text-2)}
+.s-am .s-at .s-i{width:18px;height:18px;stroke-width:2}
+.s-am b{display:block;font-size:14px}
+.s-am small{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.s-am .s-lbl{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-2);background:var(--bg-app);border:1px solid var(--border);border-radius:999px;padding:1px 8px}
+
+/* ---------- 5. Bublina ---------- */
+.s-tip{position:fixed;z-index:200;pointer-events:none;white-space:nowrap;background:var(--tip-bg);color:var(--tip-fg);font:500 12.5px var(--font);padding:6px 10px;border-radius:8px;box-shadow:var(--sh-2);opacity:0;transition:opacity .12s}
+.s-tip.show{opacity:1}
+.s-tip kbd{font:600 11.5px var(--font);opacity:.7;margin-left:6px}
+
+/* ---------- 6. Zkušební režim a lišty pod hlavičkou ---------- */
+.s-bar{flex:none;display:flex;align-items:center;gap:10px;min-height:40px;padding:4px 16px;font-size:13px;border-bottom:1px solid var(--border)}
+.s-bar .s-i{width:18px;height:18px}
+.s-bar .s-grow{flex:1}
+.s-bar.trial{background:var(--warn-soft);color:var(--warn);font-weight:600}
+.s-bar.phone{background:var(--bg-subtle);color:var(--text-2)}
+.s-bar button{font:600 13px var(--font)}
+.s-btn{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-app);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;gap:7px;font:500 14px var(--font);cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1)}
+.s-btn:hover{background:var(--bg-subtle);color:var(--text)}
+.s-btn.pri{background:var(--primary-bg);border-color:transparent;color:var(--primary-fg);font-weight:600}
+.s-btn.pri:hover{filter:brightness(1.12);background:var(--primary-bg)}
+.s-btn.ghost{background:transparent;border-color:transparent;box-shadow:none}
+.s-btn.danger{color:var(--danger)}
+.s-btn.sm{height:30px;padding:0 10px;font-size:13px}
+.s-btn .s-i{width:18px;height:18px}
+.s-x{width:30px;height:30px;border:0;background:transparent;border-radius:8px;color:inherit;display:grid;place-items:center;cursor:pointer}
+.s-x:hover{background:rgba(0,0,0,.06)}
+.s-x .s-i{width:16px;height:16px}
+
+/* ---------- 7. Patička ---------- */
+.s-footer{height:var(--s-footer);flex:none;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;background:var(--bg-app);border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.s-footer b{font-weight:600;color:var(--text-2)}
+
+/* ---------- 8. Okna ---------- */
+.s-modal-bg{position:fixed;inset:0;background:rgba(8,18,38,.45);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:grid;place-items:center;z-index:150;padding:16px;animation:s-fade .15s}
+@keyframes s-fade{from{opacity:0}}
+.s-modal{width:540px;max-width:100%;max-height:calc(100vh - 32px);background:var(--bg-app);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh-3);display:flex;flex-direction:column;overflow:hidden}
+.s-modal.wide{width:720px}
+.s-modal-h{display:flex;align-items:center;gap:10px;padding:14px 12px 14px 20px;border-bottom:1px solid var(--border);font-size:16px;font-weight:700}
+.s-modal-h .s-x{margin-left:auto}
+.s-modal-b{padding:18px 20px;overflow:auto;font-size:14px;line-height:1.55}
+.s-modal-b p{margin:0 0 10px}
+.s-modal-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-subtle);flex-wrap:wrap}
+.s-issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.s-issues li{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--warn-soft);color:var(--text);cursor:pointer}
+.s-issues li:hover{outline:2px solid var(--yellow)}
+.s-issues li .s-i{color:var(--warn);width:18px;height:18px}
+.s-issues li.err{background:var(--danger-soft)}
+.s-issues li.err .s-i{color:var(--danger)}
+.s-keys{display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center;font-size:13.5px}
+.s-keys h4{grid-column:1/-1;margin:10px 0 2px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.s-keys h4:first-child{margin-top:0}
+.s-keys kbd{display:inline-block;font:600 12px var(--font);background:var(--bg-subtle);border:1px solid var(--border);border-radius:6px;padding:2px 8px;margin-left:4px}
+.s-news h4{margin:14px 0 4px;font-size:14px}
+.s-news h4:first-child{margin-top:0}
+.s-news h4 small{color:var(--muted);font-weight:500;margin-left:6px}
+.s-news ul{margin:0;padding-left:18px}
+
+/* ---------- 9. Oznámení ---------- */
+.s-toasts{position:fixed;right:16px;bottom:calc(var(--s-footer) + 16px);display:flex;flex-direction:column;gap:8px;z-index:170;pointer-events:none}
+.s-toast{pointer-events:auto;display:flex;align-items:center;gap:10px;background:var(--tip-bg);color:var(--tip-fg);padding:10px 12px 10px 14px;border-radius:12px;box-shadow:var(--sh-3);font-size:13.5px;font-weight:500;max-width:420px;animation:s-tin .2s ease-out}
+.s-toast .s-i{width:18px;height:18px}
+.s-toast.ok .s-i{color:#4ADE80}
+.s-toast.err .s-i{color:#F87171}
+[data-theme="dark"] .s-toast.ok .s-i{color:var(--ok)}
+.s-toast button{border:0;background:transparent;color:var(--yellow);font:700 13px var(--font);cursor:pointer;padding:4px 6px;border-radius:6px}
+[data-theme="dark"] .s-toast button{color:#0B2A53}
+@keyframes s-tin{from{transform:translateY(10px);opacity:0}}
+
+/* ---------- 10. Prázdný stav a přetažení souboru ---------- */
+.s-empty{position:absolute;inset:0;display:grid;place-items:center;z-index:30;background:color-mix(in srgb,var(--bg-work) 82%,transparent);backdrop-filter:blur(2px)}
+.s-empty-box{text-align:center;max-width:460px;padding:32px;background:var(--bg-app);border:1px solid var(--border);border-radius:16px;box-shadow:var(--sh-2)}
+.s-empty-tile{width:64px;height:64px;border-radius:18px;background:var(--yellow);color:#183051;display:grid;place-items:center;margin:0 auto 16px}
+.s-empty-tile .s-i{width:34px;height:34px;stroke-width:1.8}
+.s-empty-box h2{margin:0 0 6px;font-size:20px}
+.s-empty-box p{margin:0 0 20px;color:var(--text-2)}
+.s-empty-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.s-empty-box small{display:block;margin-top:14px;color:var(--muted);font-size:12px}
+.s-drop{position:fixed;inset:12px;border:3px dashed var(--yellow);border-radius:20px;background:color-mix(in srgb,var(--yellow-soft) 85%,transparent);z-index:190;display:none;place-items:center;font-size:20px;font-weight:700;color:var(--text);pointer-events:none}
+.s-drop.show{display:grid}
+
+/* ---------- 11. Fokus ---------- */
+body.sesta :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- 12. Tablet a telefon ---------- */
+@media (max-width:1279px){
+  .s-ib{width:44px;height:44px}
+  .s-split,.s-split .s-ib,.s-split .s-car{height:44px}
+  .s-split .s-ib{height:42px}
+  .s-split .s-car{height:42px}
+}
+@media (max-width:767px){
+  :root{--s-header:56px}
+  .s-header{padding:0 8px 0 12px;gap:8px}
+  .s-sub,.s-ver{display:none}
+  .s-title{font-size:16px}
+  .s-title .s-pre{display:none}
+  .s-actions .s-phone-hide,.s-actions .s-sep{display:none}
+  .s-footer{display:none}
+  .s-appmenu{width:calc(100vw - 24px)}
+  .s-modal-bg{place-items:end center;padding:0}
+  .s-modal{width:100%;border-radius:16px 16px 0 0;max-height:92vh}
+  .s-toasts{left:12px;right:12px;bottom:84px}
+}
+@media print{
+  .s-stripe,.s-header,.s-footer,.s-bar,.s-toasts,.s-tip,.s-menu{display:none!important}
+}
