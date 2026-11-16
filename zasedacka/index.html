@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CabiNet – ZASEDAČKA</title>
+<title>CabiNet – Layout</title>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sestaapp-theme')||'light'}catch(e){}</script>
-<link rel="stylesheet" href="../shared/sesta.css?v=1.2.0">
+<link rel="stylesheet" href="../shared/sesta.css?v=1.3.0">
 <style>
 :root{
   --bg:var(--bg-work);--surface:var(--bg-app);--surface-2:var(--bg-subtle);--surface-3:var(--bg-subtle);--viewer-bg:var(--bg-work);
@@ -484,13 +484,13 @@ html[data-theme="dark"] .seg button.act{background:var(--yellow);color:#0C2143}
   </defs>
 </svg>
 
-<script src="../shared/apps.js?v=1.2.0"></script>
-<script src="../shared/sesta-firebase.js?v=1.2.0"></script>
-<script src="../shared/sesta-shell.js?v=1.2.0"></script>
+<script src="../shared/apps.js?v=1.3.0"></script>
+<script src="../shared/sesta-firebase.js?v=1.3.0"></script>
+<script src="../shared/sesta-shell.js?v=1.3.0"></script>
 <script>
 'use strict';
 /* =========================================================
-   CabiNet – ZASEDAČKA · v2.0
+   CabiNet – Layout · v2.0
    ========================================================= */
 const CELL = 20, GW = 56, GH = 36;
 const DIM = {2:{w:8,h:3}, 1:{w:4,h:3}};
@@ -1378,7 +1378,7 @@ async function buildPdf({cv,PW,PH}, bw, title){
   const content = `q ${f(PW)} 0 0 ${f(PH)} 0 0 cm /Im0 Do Q`;
   obj(5, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
   const d = new Date(), p2 = n=>String(n).padStart(2,'0');
-  obj(6, `<< /Title ${pdfStr(title)} /Creator ${pdfStr('CabiNet – ZASEDAČKA')} /Producer (CabiNet) /CreationDate (D:${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}) >>`);
+  obj(6, `<< /Title ${pdfStr(title)} /Creator ${pdfStr('CabiNet – Layout')} /Producer (CabiNet) /CreationDate (D:${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}) >>`);
   const xref = pos;
   push(`xref\n0 7\n0000000000 65535 f \n` + [1,2,3,4,5,6].map(n=>String(off[n]).padStart(10,'0')+' 00000 n \n').join(''));
   push(`trailer\n<< /Size 7 /Root 1 0 R /Info 6 0 R >>\nstartxref\n${xref}\n%%EOF\n`);

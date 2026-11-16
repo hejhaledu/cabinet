@@ -7,7 +7,7 @@
 window.SESTA = window.SESTA || {};
 SESTA.brand = {
   name: 'CabiNet',
-  version: '1.2',
+  version: '1.3',
   year: 2026,
   school: 'Základní škola Šestajovice, okres Praha-východ',
   author: 'Martin Hejhal'
@@ -22,8 +22,11 @@ SESTA.apps = [
     id: 'grid', name: 'GRID', path: 'grid/', icon: 'grid',
     desc: 'Krátké testy k rozstřižení',
     long: 'Krátký test na 4, 6 nebo 8 kopií na jednu A4 – vytisknout, rozstříhat, rozdat.',
-    version: '1.2', year: 2026,
+    version: '1.3', year: 2026,
     changes: [
+      { version: '1.3', date: '2026-11-16', items: [
+        'Verze 1.3 – sjednocení názvů aplikací v systému CabiNet.'
+      ]},
       { version: '1.2', date: '2026-11-16', items: [
         'Systém aplikací pro pedagogy se nově jmenuje CabiNet.'
       ]},
@@ -39,11 +42,14 @@ SESTA.apps = [
     ]
   },
   {
-    id: 'zasedacka', name: 'ZASEDAČKA', path: 'zasedacka/', icon: 'desks',
+    id: 'zasedacka', name: 'Layout', path: 'zasedacka/', icon: 'desks',
     desc: 'Zasedací pořádek třídy',
     long: 'Rozmístění lavic, rozsazení žáků podle vztahů a zraku, tisk plánku.',
-    version: '1.2', year: 2026,
+    version: '1.3', year: 2026,
     changes: [
+      { version: '1.3', date: '2026-11-16', items: [
+        'Aplikace ZASEDAČKA se nově jmenuje Layout.'
+      ]},
       { version: '1.2', date: '2026-11-16', items: [
         'Systém aplikací pro pedagogy se nově jmenuje CabiNet.'
       ]},
@@ -60,11 +66,14 @@ SESTA.apps = [
     ]
   },
   {
-    id: 'cestak', name: 'CESŤÁK', path: 'cestak/', icon: 'car',
+    id: 'cestak', name: 'TripDocument', path: 'cestak/', icon: 'car',
     desc: 'Cestovní doklady',
     long: 'Vyplnění, výpočet náhrad a tisk cestovního dokladu.',
-    version: '1.2', year: 2026,
+    version: '1.3', year: 2026,
     changes: [
+      { version: '1.3', date: '2026-11-16', items: [
+        'Aplikace CESŤÁK se nově jmenuje TripDocument.'
+      ]},
       { version: '1.2', date: '2026-11-16', items: [
         'Systém aplikací pro pedagogy se nově jmenuje CabiNet.'
       ]},
